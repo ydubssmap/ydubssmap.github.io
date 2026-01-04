@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Shark</title>
+    <title>Budget Shark V2B</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -36,42 +35,41 @@
         #tab-2:checked ~ .selection-indicator { transform: translateX(100%); }
         #tab-3:checked ~ .selection-indicator { transform: translateX(200%); }
 
-        /* Cards & Sliders */
+        /* Cards */
         .hero-card { background: linear-gradient(135deg, #2b2930 0%, #1D1B20 100%); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 16px; }
         .hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 6px; display: block; }
         .hero-amount { font-size: 38px; font-weight: 700; color: var(--md-sys-color-primary); margin: 0; line-height: 1; }
-.card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-pill); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }        .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pill { padding: 4px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1.5px solid transparent; background: transparent; display: inline-block; margin-top: 6px; }
         .pill.giving { border-color: #FFD54F; color: #FFD54F; }
         .pill.bill { border-color: #F2B8B5; color: #F2B8B5; }
         .pill.variable { border-color: #D0BCFF; color: #D0BCFF; }
-        .pill.neutral { border-color: var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); }
 
-        input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
+        /* FIXED SLIDERS */
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; position: relative; z-index: 5; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; border-radius: 50px; background: #35323a; }
         input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
-        /* Progress Bar & Cute Shark */
+        /* Progress Bar */
         .progress-card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 24px 0; }
-        .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1s ease-in-out; }
         
-        /* The Cute Swimming Shark SVG */
-        .swimming-shark { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 50px; cursor: pointer; animation: swim-wiggle 0.8s infinite alternate ease-in-out; }
-        @keyframes swim-wiggle { from { transform: translateY(-50%) rotate(-5deg); } to { transform: translateY(-50%) rotate(5deg); } }
+        /* Swimming Shark Animation */
+        .swimming-shark-img { position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 60px; height: auto; cursor: pointer; animation: swim-wiggle 0.8s infinite alternate ease-in-out; }
+        @keyframes swim-wiggle { from { transform: translateY(-50%) rotate(-8deg); } to { transform: translateY(-50%) rotate(8deg); } }
 
-        /* Spotlight Effect */
-        .spotlight { outline: 9999px solid rgba(0,0,0,0.85); z-index: 100; position: relative; }
+        /* Darken Screen & Chomp */
+        #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); pointer-events: none; transition: background 0.3s; }
+        .chomp-text-large { font-family: 'Pacifico', cursive; font-size: 80px; color: #F2B8B5; text-shadow: 4px 4px 0px #fff; z-index: 2001; }
+        .chomp-shark-sprite { position: absolute; width: 350px; left: -400px; z-index: 2002; transition: left 1s cubic-bezier(0.5, 0, 0.5, 1); }
 
-        /* Full Screen CHOMP Overlay */
-        #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        .chomp-text-large { font-family: 'Pacifico', cursive; font-size: 80px; color: #F2B8B5; text-shadow: 4px 4px 0px #fff; animation: chomp-shake 0.2s infinite; }
-        @keyframes chomp-shake { 0% { transform: translate(2px, 1px) rotate(0deg); } 50% { transform: translate(-1px, -2px) rotate(-1deg); } 100% { transform: translate(1px, 2px) rotate(1deg); } }
-        .chomp-shark-sprite { position: absolute; width: 250px; left: -300px; transition: left 0.8s ease-in; }
+        /* Spotlight */
+        .spotlight { outline: 9999px solid rgba(0,0,0,0.8); z-index: 100; position: relative; }
 
-        /* Tiny Inputs & Reset */
-        .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 14px; padding: 10px; width: 100px; text-align: center; outline: none; font-size: 14px; }
-        .reset-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 18px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 12px; width: 100%; font-size: 14px; }
+        .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 14px; padding: 10px; width: 100px; text-align: center; font-size: 14px; }
+        .reset-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 18px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 12px; width: 100%; }
 
         #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 20, 0.98); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
     </style>
@@ -79,19 +77,15 @@
 <body>
 
 <div id="chomp-overlay">
-    <div class="chomp-text-large" id="chomp-words">CHOMP!!</div>
-    <div class="chomp-shark-sprite" id="chomp-shark-anim">
-        <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/><circle cx="160" cy="40" r="7" fill="white"/><circle cx="162" cy="38" r="3" fill="black"/><path d="M150 60 L185 60" stroke="black" stroke-width="4" stroke-linecap="round" id="shark-mouth-snap"/></svg>
-    </div>
+    <div class="chomp-text-large">CHOMP!!</div>
+    <img src="animated-shark.png" class="chomp-shark-sprite" id="chomp-shark-anim">
 </div>
 
 <div id="celebration-overlay">
-    <div style="width: 180px; margin-bottom: 20px;">
-        <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/><circle cx="160" cy="40" r="7" fill="white"/><circle cx="162" cy="38" r="3" fill="black"/><path d="M155 65C165 70 175 65 180 60" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
-    </div>
+    <img src="animated-shark.png" style="width: 200px; margin-bottom: 20px;">
     <h1 style="font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 48px;">I KNEW YOU<br>COULD DO IT!</h1>
-    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px;">I LOVE YOU, MEG!! ❤️</p>
-    <button class="reset-btn" style="width: 180px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">You're the best!</button>
+    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px; font-size: 20px;">I LOVE YOU, MEG!! ❤️</p>
+    <button class="reset-btn" style="width: 180px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">You're my hero!</button>
 </div>
 
 <div class="app-container">
@@ -109,7 +103,7 @@
             <div><span class="hero-label">Target Savings</span><p class="hero-amount" id="target-savings-display">$0</p></div>
             <div style="text-align: right;"><span class="hero-label">Actual Saved</span><input type="number" id="actual-savings-input" class="tiny-input" oninput="updateActualSavings(this.value)"></div>
         </div>
-        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Waiting...</div>
+        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Awaiting Entry</div>
     </div>
 
     <div class="card" style="padding: 20px 24px;"><div class="card-header"><span style="font-weight: 500;">Combined Monthly Income</span><input type="number" id="income-input" class="tiny-input" oninput="updateIncome(this.value)"></div></div>
@@ -123,9 +117,7 @@
         </div>
         <div class="liquid-container">
             <div id="goal-progress-fill" class="liquid-fill">
-                <div class="swimming-shark" onclick="sharkClick()">
-                    <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="white"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="white"/><circle cx="160" cy="40" r="6" fill="#0288D1"/></svg>
-                </div>
+                <img src="animated-shark.png" class="swimming-shark-img" onclick="sharkClick()">
             </div>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--md-sys-color-on-surface-variant); padding: 0 4px;">
@@ -141,15 +133,19 @@
     function sharkClick() {
         clickCount++;
         if (clickCount < 4) {
-            confetti({ particleCount: 15, spread: 50, origin: { y: 0.8 }, colors: ['#FF69B4', '#D0BCFF'] });
+            // HEARTS REACTION
+            const scalar = 2;
+            const heart = confetti.shapeFromPath({ path: 'M167 72c19,-38 37,-56 75,-56 42,0 75,33 75,75 0,84 -150,165 -150,165 0,0 -150,-81 -150,-165 0,-42 33,-75 75,-75 38,0 56,18 75,56z' });
+            confetti({ particleCount: 15, spread: 60, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], shapes: [heart], scalar });
         } else {
+            // DARKEN SCREEN + CHOMP
             const overlay = document.getElementById('chomp-overlay');
             const shark = document.getElementById('chomp-shark-anim');
             overlay.style.display = 'flex';
-            setTimeout(() => { shark.style.left = '110%'; }, 100);
+            setTimeout(() => { shark.style.left = '115%'; }, 100);
             setTimeout(() => { 
                 overlay.style.display = 'none'; 
-                shark.style.left = '-300px'; 
+                shark.style.left = '-400px'; 
                 clickCount = 0; 
             }, 1200);
         }
@@ -161,7 +157,7 @@
     let hasCelebrated = false;
 
     function init() {
-        state = JSON.parse(localStorage.getItem('budgetShark_V8')) || JSON.parse(JSON.stringify(defaultState));
+        state = JSON.parse(localStorage.getItem('budgetShark_V10')) || JSON.parse(JSON.stringify(defaultState));
         document.getElementById('base-savings').value = state.baseSavings;
         render();
     }
@@ -182,16 +178,6 @@
         setTimeout(() => sec.classList.remove('spotlight'), 2000);
     }
 
-    function endMonthReset() {
-        if(!confirm(`Bank your savings and reset sliders?`)) return;
-        state.baseSavings += (state.p1.actualSavings + state.p2.actualSavings);
-        state.p1.actualSavings = 0; state.p2.actualSavings = 0;
-        Object.keys(state.p1.expenses).forEach(k => state.p1.expenses[k].val = state.p1.expenses[k].goal);
-        Object.keys(state.p2.expenses).forEach(k => state.p2.expenses[k].val = state.p2.expenses[k].goal);
-        save(); render();
-        showSpotlight();
-    }
-
     function calculateFinals() {
         const p1Exp = Object.values(state.p1.expenses).reduce((a, b) => a + b.val, 0);
         const p2Exp = Object.values(state.p2.expenses).reduce((a, b) => a + b.val, 0);
@@ -200,7 +186,7 @@
         
         document.getElementById('target-savings-display').innerText = "$" + Math.round(target).toLocaleString();
         document.getElementById('actual-savings-input').value = (state.currentTab === 'monthly') ? actual : (actual || "");
-        
+
         const totalOverall = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
         document.getElementById('total-saved-label').innerText = "$" + Math.round(totalOverall).toLocaleString() + " saved";
         document.getElementById('goal-progress-fill').style.width = Math.min((totalOverall / 5000) * 100, 100) + "%";
@@ -222,24 +208,16 @@
             let html = `<div class="card"><div class="card-header"><div><span class="hero-label">${d.label}</span>`;
             if(state.currentTab !== 'monthly') html += `<div class="pill ${d.type}">Target: $${d.goal}</div>`;
             html += `</div><span style="font-weight:700;font-size:28px;" id="amt-${k}">$${Math.round(val).toLocaleString()}</span></div>`;
-            if(state.currentTab !== 'monthly') html += `<input type="range" id="slider-${k}" min="0" max="${d.max}" value="${d.val}" oninput="updateExp('${k}', this.value)">`;
+            if(state.currentTab !== 'monthly') html += `<input type="range" min="0" max="${d.max}" value="${d.val}" oninput="updateExp('${k}', this.value)">`;
             html += `</div>`;
             container.innerHTML += html;
-            if(state.currentTab !== 'monthly') {
-                setTimeout(() => {
-                    const s = document.getElementById(`slider-${k}`);
-                    const pct = (s.value / s.max) * 100;
-                    let c = d.type === 'bill' ? '#F2B8B5' : (d.type === 'giving' ? '#FFD54F' : '#D0BCFF');
-                    s.style.background = `linear-gradient(to right, ${c} ${pct}%, #35323a ${pct}%)`;
-                }, 10);
-            }
         });
         calculateFinals();
     }
-    function updateExp(k, v) { state[state.currentTab].expenses[k].val = parseFloat(v); save(); render(); }
+    function updateExp(k, v) { state[state.currentTab].expenses[k].val = parseFloat(v); save(); calculateFinals(); document.getElementById(`amt-${k}`).innerText = "$" + Math.round(v).toLocaleString(); }
     function updateIncome(v) { state[state.currentTab].income = parseFloat(v); save(); calculateFinals(); }
     function updateBase(v) { state.baseSavings = parseFloat(v); save(); calculateFinals(); }
-    function save() { localStorage.setItem('budgetShark_V8', JSON.stringify(state)); }
+    function save() { localStorage.setItem('budgetShark_V10', JSON.stringify(state)); }
     init();
 </script>
 </body>
