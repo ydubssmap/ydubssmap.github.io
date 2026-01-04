@@ -6,6 +6,7 @@
     <title>Budget Shark</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23A9DEF9%22/><circle cx=%2235%22 cy=%2240%22 r=%225%22 fill=%22black%22/><circle cx=%2265%22 cy=%2240%22 r=%225%22 fill=%22black%22/><path d=%22M45 60 Q50 65 55 60%22 stroke=%22black%22 fill=%22none%22 stroke-width=%222%22/></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --md-sys-color-background: #141218;
@@ -21,101 +22,76 @@
             --radius-pill: 50px;
         }
 
-        body {
-            background-color: var(--md-sys-color-background);
-            color: var(--md-sys-color-on-surface);
-            font-family: 'Roboto', sans-serif;
-            margin: 0; padding: 20px;
-            display: flex; justify-content: center;
-            min-height: 100vh; overflow-x: hidden;
-        }
-
+        body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; }
         header { text-align: center; padding: 10px 0; }
         h1 { font-family: 'Pacifico', cursive; font-size: 34px; color: var(--md-sys-color-primary); margin: 0; }
 
-        .segmented-control {
-            background: var(--md-sys-color-surface);
-            border: 1px solid var(--md-sys-color-outline);
-            border-radius: var(--radius-pill);
-            display: flex; position: relative; height: 52px; margin-top: 20px; overflow: hidden;
-        }
+        .segmented-control { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-pill); display: flex; position: relative; height: 52px; margin-top: 20px; overflow: hidden; }
         .segmented-control input { display: none; }
         .segmented-control label { flex: 1; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--md-sys-color-on-surface-variant); }
         .segmented-control input:checked + label { color: var(--md-sys-color-on-primary); transition: color 0.3s; }
-        .selection-indicator {
-            position: absolute; height: 100%; width: 33.33%;
-            background-color: var(--md-sys-color-primary);
-            border-radius: var(--radius-pill); top: 0; left: 0;
-            transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1); z-index: 1;
-        }
+        .selection-indicator { position: absolute; height: 100%; width: 33.33%; background-color: var(--md-sys-color-primary); border-radius: var(--radius-pill); top: 0; left: 0; transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1); z-index: 1; }
         #tab-1:checked ~ .selection-indicator { transform: translateX(0%); }
         #tab-2:checked ~ .selection-indicator { transform: translateX(100%); }
         #tab-3:checked ~ .selection-indicator { transform: translateX(200%); }
 
-        .hero-card {
-            background: linear-gradient(135deg, #2b2930 0%, #1D1B20 100%);
-            border-radius: var(--radius-xl); padding: 28px;
-            border: 1px solid rgba(255,255,255,0.08);
-            display: flex; flex-direction: column; gap: 16px;
-        }
+        .hero-card { background: linear-gradient(135deg, #2b2930 0%, #1D1B20 100%); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 16px; }
         .hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 6px; display: block; }
         .hero-amount { font-size: 38px; font-weight: 700; color: var(--md-sys-color-primary); margin: 0; line-height: 1; }
         
         .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }
         .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         
-        .pill { 
-            padding: 4px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; 
-            text-transform: uppercase; border: 1.5px solid transparent; background: transparent;
-            display: inline-block; margin-top: 6px;
-        }
+        .pill { padding: 4px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1.5px solid transparent; background: transparent; display: inline-block; margin-top: 6px; }
         .pill.giving { border-color: #FFD54F; color: #FFD54F; }
         .pill.bill { border-color: #F2B8B5; color: #F2B8B5; }
         .pill.variable { border-color: #D0BCFF; color: #D0BCFF; }
         .pill.neutral { border-color: var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); }
 
+        /* FIXED ROUNDED SLIDERS */
         input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; border-radius: 4px; background: #35323a; }
-        input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; border-radius: 50px; background: #35323a; }
+        input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); position: relative; z-index: 10; }
 
         .progress-card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.1); }
-        .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 18px; overflow: hidden; margin: 24px 0; }
-        .liquid-fill { 
-            position: absolute; left: 0; top: 0; height: 100%; 
-            background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%);
-            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .swimming-shark {
-            position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
-            width: 44px; z-index: 5;
-        }
+        .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 24px 0; }
+        .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* CUTE SHARK ANIMATION */
+        .swimming-shark { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 45px; animation: swim-wiggle 0.6s infinite alternate ease-in-out; }
+        @keyframes swim-wiggle { from { transform: translateY(-50%) rotate(-5deg); } to { transform: translateY(-50%) rotate(5deg); } }
 
         .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 14px; padding: 10px; width: 100px; text-align: center; outline: none; font-size: 14px; }
         .reset-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 18px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 12px; width: 100%; font-size: 14px; }
 
-        #celebration-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 12, 20, 0.98); z-index: 1000; display: none; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
+        #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 20, 0.98); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .bubbly-text { font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 48px; line-height: 1.2; text-shadow: 4px 4px 0px #fff; animation: bounce 1s infinite alternate ease-in-out; }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-20px); } }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-30px); } }
+        
+        .celebration-shark { width: 180px; animation: grand-swim 3s infinite ease-in-out; }
+        @keyframes grand-swim { 0%, 100% { transform: translateX(-15px) rotate(-3deg); } 50% { transform: translateX(15px) rotate(3deg); } }
     </style>
 </head>
 <body>
 
 <div id="celebration-overlay">
-    <div style="width: 180px; margin-bottom: 20px;">
-        <svg viewBox="0 0 200 100" fill="#81D4FA">
-            <path d="M40 50C40 25 80 15 120 15C160 15 180 35 180 50C180 65 160 85 120 85C80 85 40 75 40 50Z"/>
-            <path d="M45 50L10 30V70L45 50Z" fill="#4FC3F7"/>
-            <circle cx="155" cy="40" r="5" fill="black"/>
+    <div class="celebration-shark">
+        <svg viewBox="0 0 200 100">
+            <path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7">
+                <animateTransform attributeName="transform" type="rotate" values="0 40 50; 15 40 50; 0 40 50" dur="0.5s" repeatCount="indefinite" />
+            </path>
+            <path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/>
+            <path d="M110 15L95 0L80 15H110Z" fill="#4FC3F7"/>
+            <path d="M110 85L95 100L80 85H110Z" fill="#4FC3F7"/>
+            <circle cx="160" cy="40" r="7" fill="white"/>
+            <circle cx="162" cy="38" r="3" fill="black"/>
+            <path d="M155 65C165 70 175 65 180 60" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/>
         </svg>
     </div>
     <h1 class="bubbly-text">I KNEW YOU<br>COULD DO IT!</h1>
-    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px;">I LOVE YOU, MEG!! ❤️</p>
-    <button class="reset-btn" style="width: 160px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">Back to App</button>
+    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px; font-size: 20px;">I LOVE YOU, MEG!! ❤️</p>
+    <button class="reset-btn" style="width: 180px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">You're my hero!</button>
 </div>
 
 <div class="app-container">
@@ -133,7 +109,7 @@
             <div><span class="hero-label">Target Savings</span><p class="hero-amount" id="target-savings-display">$0</p></div>
             <div style="text-align: right;"><span class="hero-label">Actual Saved</span><input type="number" id="actual-savings-input" class="tiny-input" oninput="updateActualSavings(this.value)"></div>
         </div>
-        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Waiting for entry</div>
+        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Awaiting Entry</div>
     </div>
 
     <div class="card" style="padding: 20px 24px;"><div class="card-header"><span style="font-weight: 500;">Combined Monthly Income</span><input type="number" id="income-input" class="tiny-input" oninput="updateIncome(this.value)"></div></div>
@@ -143,13 +119,17 @@
     <div class="progress-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <span class="hero-label" style="color:var(--md-sys-color-primary)">Goal Progress</span>
-            <div style="text-align: right;"><span class="hero-label">Banked Total</span><input type="number" id="base-savings" class="tiny-input" style="width:90px;" oninput="updateBase(this.value)"></div>
+            <div style="text-align: right;"><span class="hero-label">Banked Total</span><input type="number" id="base-savings" class="tiny-input" style="width:95px;" oninput="updateBase(this.value)"></div>
         </div>
         
         <div class="liquid-container">
             <div id="goal-progress-fill" class="liquid-fill">
                 <div class="swimming-shark">
-                    <svg viewBox="0 0 200 100" fill="white"><path d="M40 50C40 25 80 15 120 15C160 15 180 35 180 50C180 65 160 85 120 85C80 85 40 75 40 50ZM45 50L10 30V70L45 50Z"/></svg>
+                    <svg viewBox="0 0 200 100">
+                        <path d="M40 50L10 25V75L40 50Z" fill="white"/>
+                        <path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="white"/>
+                        <circle cx="160" cy="40" r="6" fill="#0288D1"/>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -163,13 +143,19 @@
 </div>
 
 <script>
-    const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 1122, actualSavings: 0, expenses: getDefaults() }, p2: { income: 1122, actualSavings: 0, expenses: getDefaults() } };
-    function getDefaults() { return { 'tithe': { label: 'Tithe', val: 100, max: 300, goal: 100, type: 'giving' }, 'rent': { label: 'Rent', val: 200, max: 400, goal: 200, type: 'bill' }, 'insur': { label: 'Insurance', val: 280, max: 400, goal: 280, type: 'bill' }, 'gas': { label: 'Gas', val: 45, max: 150, goal: 45, type: 'variable' }, 'spend': { label: 'Spending', val: 100, max: 300, goal: 100, type: 'variable' } }; }
+    const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 2244, actualSavings: 0, expenses: getDefaults() }, p2: { income: 2244, actualSavings: 0, expenses: getDefaults() } };
+    function getDefaults() { return { 
+        'tithe': { label: 'Tithe', val: 200, max: 500, goal: 200, type: 'giving' }, 
+        'rent': { label: 'Rent', val: 400, max: 800, goal: 400, type: 'bill' }, 
+        'insur': { label: 'Insurance', val: 560, max: 700, goal: 560, type: 'bill' }, 
+        'gas': { label: 'Gas', val: 90, max: 200, goal: 90, type: 'variable' }, 
+        'spend': { label: 'Spending', val: 200, max: 500, goal: 200, type: 'variable' } 
+    }; }
     let state = {};
     let hasCelebrated = false;
 
     function init() {
-        const saved = localStorage.getItem('budgetShark_V5');
+        const saved = localStorage.getItem('budgetShark_V6');
         state = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultState));
         document.getElementById('base-savings').value = state.baseSavings;
         render();
@@ -202,7 +188,11 @@
         document.getElementById('goal-progress-fill').style.width = percent + "%";
         document.getElementById('reset-month-btn').style.display = state.currentTab === 'monthly' ? 'block' : 'none';
 
-        if (totalOverall >= 5000 && !hasCelebrated) { hasCelebrated = true; document.getElementById('celebration-overlay').style.display = 'flex'; }
+        if (totalOverall >= 5000 && !hasCelebrated) { 
+            hasCelebrated = true; 
+            document.getElementById('celebration-overlay').style.display = 'flex';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
     }
 
     function endMonthReset() {
@@ -237,7 +227,7 @@
         }
         calculateFinals();
     }
-    function save() { localStorage.setItem('budgetShark_V5', JSON.stringify(state)); }
+    function save() { localStorage.setItem('budgetShark_V6', JSON.stringify(state)); }
     init();
 </script>
 </body>
