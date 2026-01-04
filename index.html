@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Shark V2E</title>
+    <title>Budget Shark</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --md-sys-color-background: #141218;
@@ -25,7 +25,6 @@
         header { text-align: center; padding: 10px 0; }
         h1 { font-family: 'Pacifico', cursive; font-size: 34px; color: var(--md-sys-color-primary); margin: 0; }
 
-        /* Navigation */
         .segmented-control { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-pill); display: flex; position: relative; height: 52px; margin-top: 20px; overflow: hidden; }
         .segmented-control input { display: none; }
         .segmented-control label { flex: 1; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--md-sys-color-on-surface-variant); }
@@ -35,10 +34,10 @@
         #tab-2:checked ~ .selection-indicator { transform: translateX(100%); }
         #tab-3:checked ~ .selection-indicator { transform: translateX(200%); }
 
-        /* Cards */
         .hero-card { background: linear-gradient(135deg, #2b2930 0%, #1D1B20 100%); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 16px; }
         .hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 6px; display: block; }
         .hero-amount { font-size: 38px; font-weight: 700; color: var(--md-sys-color-primary); margin: 0; line-height: 1; }
+        
         .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }
         .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pill { padding: 4px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1.5px solid transparent; background: transparent; display: inline-block; margin-top: 6px; }
@@ -46,31 +45,24 @@
         .pill.bill { border-color: #F2B8B5; color: #F2B8B5; }
         .pill.variable { border-color: #D0BCFF; color: #D0BCFF; }
 
-        /* Sliders */
         input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; position: relative; z-index: 5; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; border-radius: 50px; background: #35323a; }
         input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
-        /* Progress Bar */
         .progress-card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 24px 0; }
         .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1s ease-in-out; }
         
-        /* Universal Shark Swim Animation */
         .shark-swim { animation: universal-wiggle 0.8s infinite alternate ease-in-out; }
         @keyframes universal-wiggle { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
-
         .swimming-shark-img { position: absolute; top: 10%; right: 0; width: 60px; height: auto; cursor: pointer; }
 
-        /* Darken Screen & Slow Chomp */
         #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); pointer-events: none; }
         .chomp-text-large { font-family: 'Pacifico', cursive; font-size: 80px; color: #F2B8B5; text-shadow: 4px 4px 0px #fff; z-index: 2001; }
         .chomp-shark-sprite { position: absolute; width: 350px; left: -400px; z-index: 2002; transition: left 2.5s linear; }
 
-        /* Spotlight */
         .spotlight { outline: 9999px solid rgba(0,0,0,0.85); z-index: 100; position: relative; }
 
-        /* Bubbles */
         .bubble { position: fixed; bottom: -50px; background: rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; animation: rise 4s infinite ease-in; z-index: 1001; display: flex; align-items: center; justify-content: center; color: #4CAF50; font-weight: bold; font-size: 16px; }
         @keyframes rise { 0% { bottom: -50px; transform: translateX(0); opacity: 1; } 100% { bottom: 100vh; transform: translateX(50px); opacity: 0; } }
 
@@ -148,13 +140,24 @@
     function sharkClick() {
         clickCount++;
         if (clickCount < 4) {
-            confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], scalar: 2 });
+            // HEART SHAPES: Enabled by the v1.9.3 library update!
+            confetti({ 
+                particleCount: 15, 
+                spread: 70, 
+                origin: { y: 0.8 }, 
+                shapes: [confetti.shapeFromText({ text: '❤️' }), confetti.shapeFromText({ text: '💖' })],
+                scalar: 2
+            });
         } else {
             const overlay = document.getElementById('chomp-overlay');
             const shark = document.getElementById('chomp-shark-anim');
             overlay.style.display = 'flex';
             setTimeout(() => { shark.style.left = '115%'; }, 50);
-            setTimeout(() => { overlay.style.display = 'none'; shark.style.left = '-400px'; clickCount = 0; }, 2600);
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+                shark.style.left = '-400px'; 
+                clickCount = 0; 
+            }, 2600);
         }
     }
 
@@ -183,37 +186,32 @@
         document.getElementById('celebration-overlay').style.display = 'none';
         const end = Date.now() + 10000;
         (function frame() {
-            confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 } });
-            confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 } });
+            // Grand Finale using Hearts and Sparkles
+            confetti({ 
+                particleCount: 3, angle: 60, spread: 60, origin: { x: 0 }, 
+                shapes: [confetti.shapeFromText({ text: '❤️' })], scalar: 2 
+            });
+            confetti({ 
+                particleCount: 3, angle: 120, spread: 60, origin: { x: 1 }, 
+                shapes: [confetti.shapeFromText({ text: '💖' })], scalar: 2 
+            });
             if (Date.now() < end) requestAnimationFrame(frame);
         }());
     }
 
-    function endMonthReset() {
-        const newBase = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
-        state.baseSavings = newBase;
-        state.p1.actualSavings = 0;
-        state.p2.actualSavings = 0;
-        document.getElementById('base-savings').value = newBase;
-        save();
-        calculateFinals();
-        alert('Month closed! Savings have been banked.');
-    }
-
-    // Logic State
     const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 2244, actualSavings: 0, expenses: getDefaults() }, p2: { income: 2244, actualSavings: 0, expenses: getDefaults() } };
     function getDefaults() { return { 'tithe': { label: 'Tithe', val: 200, max: 500, goal: 200, type: 'giving' }, 'rent': { label: 'Rent', val: 400, max: 800, goal: 400, type: 'bill' }, 'insur': { label: 'Insurance', val: 560, max: 700, goal: 560, type: 'bill' }, 'gas': { label: 'Gas', val: 90, max: 200, goal: 90, type: 'variable' }, 'spend': { label: 'Spending', val: 200, max: 500, goal: 200, type: 'variable' } }; }
+    
     let state = {};
     let hasCelebrated = false;
 
     function init() {
-        state = JSON.parse(localStorage.getItem('budgetShark_V2E')) || JSON.parse(JSON.stringify(defaultState));
-        document.getElementById('base-savings').value = state.baseSavings;
-        document.getElementById('income-input').value = state[state.currentTab].income;
+        state = JSON.parse(localStorage.getItem('BudgetShark_Official')) || JSON.parse(JSON.stringify(defaultState));
+        document.getElementById('base-savings').value = state.baseSavings || 0;
         render();
     }
 
-    function switchTab(t) { state.currentTab = t; document.getElementById('income-input').value = state[t === 'monthly' ? 'p1' : t].income; render(); }
+    function switchTab(t) { state.currentTab = t; render(); }
     
     function commitDeposit() {
         const val = parseFloat(document.getElementById('actual-savings-input').value) || 0;
@@ -246,7 +244,7 @@
         
         document.getElementById('deposit-action').style.display = (state.currentTab === 'monthly') ? 'none' : 'block';
 
-        const totalOverall = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
+        const totalOverall = (state.baseSavings || 0) + (state.p1.actualSavings + state.p2.actualSavings);
         document.getElementById('total-saved-label').innerText = "$" + Math.round(totalOverall).toLocaleString() + " saved";
         document.getElementById('goal-progress-fill').style.width = Math.min((totalOverall / 5000) * 100, 100) + "%";
         document.getElementById('reset-month-btn').style.display = state.currentTab === 'monthly' ? 'block' : 'none';
@@ -255,7 +253,12 @@
             hasCelebrated = true; 
             document.getElementById('celebration-overlay').style.display = 'flex';
             createBubbles();
-            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+            // Celebrate with massive hearts!
+            confetti({ 
+                particleCount: 100, spread: 80, origin: { y: 0.6 }, 
+                shapes: [confetti.shapeFromText({ text: '❤️' }), confetti.shapeFromText({ text: '💖' })],
+                scalar: 3
+            });
         }
     }
 
@@ -278,7 +281,7 @@
     function updateExp(k, v) { state[state.currentTab].expenses[k].val = parseFloat(v); save(); document.getElementById(`amt-${k}`).innerText = "$" + Math.round(v).toLocaleString(); calculateFinals(); }
     function updateIncome(v) { state[state.currentTab].income = parseFloat(v); save(); calculateFinals(); }
     function updateBase(v) { state.baseSavings = parseFloat(v); save(); calculateFinals(); }
-    function save() { localStorage.setItem('budgetShark_V2E', JSON.stringify(state)); }
+    function save() { localStorage.setItem('BudgetShark_Official', JSON.stringify(state)); }
     init();
 </script>
 </body>
