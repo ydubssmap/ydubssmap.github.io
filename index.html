@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Shark V2D</title>
+    <title>Budget Shark V3E</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -21,7 +21,7 @@
         }
 
         body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; }
-        .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 60px; }
+        .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 100px; }
         header { text-align: center; padding: 10px 0; }
         h1 { font-family: 'Pacifico', cursive; font-size: 34px; color: var(--md-sys-color-primary); margin: 0; }
 
@@ -46,7 +46,7 @@
         .pill.bill { border-color: #F2B8B5; color: #F2B8B5; }
         .pill.variable { border-color: #D0BCFF; color: #D0BCFF; }
 
-        /* FIXED SLIDERS */
+        /* Sliders */
         input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; position: relative; z-index: 5; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; border-radius: 50px; background: #35323a; }
         input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
@@ -59,6 +59,7 @@
         /* Universal Shark Swim Animation */
         .shark-swim { animation: universal-wiggle 0.8s infinite alternate ease-in-out; }
         @keyframes universal-wiggle { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+
         .swimming-shark-img { position: absolute; top: 10%; right: 0; width: 60px; height: auto; cursor: pointer; }
 
         /* Darken Screen & Slow Chomp */
@@ -70,12 +71,11 @@
         .spotlight { outline: 9999px solid rgba(0,0,0,0.85); z-index: 100; position: relative; }
 
         /* Bubbles */
-        .bubble { position: fixed; bottom: -50px; background: rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; animation: rise 4s infinite ease-in; z-index: 1001; display: flex; align-items: center; justify-content: center; color: #4CAF50; font-weight: bold; }
+        .bubble { position: fixed; bottom: -50px; background: rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; animation: rise 4s infinite ease-in; z-index: 1001; display: flex; align-items: center; justify-content: center; color: #4CAF50; font-weight: bold; font-size: 16px; }
         @keyframes rise { 0% { bottom: -50px; transform: translateX(0); opacity: 1; } 100% { bottom: 100vh; transform: translateX(50px); opacity: 0; } }
 
         .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 14px; padding: 10px; width: 100px; text-align: center; font-size: 14px; }
-        .deposit-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 10px 16px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 8px; font-size: 12px; transition: opacity 0.2s; }
-        .deposit-btn:active { opacity: 0.7; }
+        .deposit-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 8px 16px; border-radius: var(--radius-pill); font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 12px; }
         .reset-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 18px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 12px; width: 100%; }
 
         #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 20, 0.98); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
@@ -149,7 +149,7 @@
     function sharkClick() {
         clickCount++;
         if (clickCount < 4) {
-            confetti({ particleCount: 30, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], shapes: [heartShape], scalar: 2 });
+            confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], shapes: [heartShape], scalar: 2 });
         } else {
             const overlay = document.getElementById('chomp-overlay');
             const shark = document.getElementById('chomp-shark-anim');
@@ -165,7 +165,7 @@
             setTimeout(() => {
                 const b = document.createElement('div');
                 b.className = 'bubble';
-                const size = Math.random() * 40 + 20;
+                const size = Math.random() * 30 + 15;
                 b.style.width = size + 'px';
                 b.style.height = size + 'px';
                 b.style.left = Math.random() * 100 + 'vw';
@@ -173,7 +173,6 @@
                 if (Math.random() > 0.6) {
                     b.innerText = '$';
                     b.style.color = '#4CAF50';
-                    b.style.fontSize = (size * 0.5) + 'px';
                 }
                 container.appendChild(b);
                 setTimeout(() => b.remove(), 5000);
@@ -185,30 +184,25 @@
         document.getElementById('celebration-overlay').style.display = 'none';
         const end = Date.now() + 10000;
         (function frame() {
-            confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
-            confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+            confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 } });
+            confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 } });
             if (Date.now() < end) requestAnimationFrame(frame);
         }());
     }
 
+    // Logic State
     const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 2244, actualSavings: 0, expenses: getDefaults() }, p2: { income: 2244, actualSavings: 0, expenses: getDefaults() } };
     function getDefaults() { return { 'tithe': { label: 'Tithe', val: 200, max: 500, goal: 200, type: 'giving' }, 'rent': { label: 'Rent', val: 400, max: 800, goal: 400, type: 'bill' }, 'insur': { label: 'Insurance', val: 560, max: 700, goal: 560, type: 'bill' }, 'gas': { label: 'Gas', val: 90, max: 200, goal: 90, type: 'variable' }, 'spend': { label: 'Spending', val: 200, max: 500, goal: 200, type: 'variable' } }; }
-    
     let state = {};
     let hasCelebrated = false;
 
     function init() {
-        state = JSON.parse(localStorage.getItem('budgetShark_V2D')) || JSON.parse(JSON.stringify(defaultState));
+        state = JSON.parse(localStorage.getItem('budgetShark_V2E')) || JSON.parse(JSON.stringify(defaultState));
         document.getElementById('base-savings').value = state.baseSavings;
-        document.getElementById('actual-savings-input').value = state[state.currentTab === 'monthly' ? 'p1' : state.currentTab].actualSavings || "";
         render();
     }
 
-    function switchTab(t) { 
-        state.currentTab = t; 
-        document.getElementById('actual-savings-input').value = (t === 'monthly') ? (state.p1.actualSavings + state.p2.actualSavings) : (state[t].actualSavings || "");
-        render(); 
-    }
+    function switchTab(t) { state.currentTab = t; render(); }
     
     function commitDeposit() {
         const val = parseFloat(document.getElementById('actual-savings-input').value) || 0;
@@ -234,12 +228,13 @@
         let actual = state.currentTab === 'monthly' ? (state.p1.actualSavings + state.p2.actualSavings) : state[state.currentTab].actualSavings;
         
         document.getElementById('target-savings-display').innerText = "$" + Math.round(target).toLocaleString();
+        
+        // Fix: Don't clear the input while the user is typing, only update it on tab switch or deposit
+        if(document.activeElement !== document.getElementById('actual-savings-input')) {
+            document.getElementById('actual-savings-input').value = (state.currentTab === 'monthly') ? actual : (actual || "");
+        }
+        
         document.getElementById('deposit-action').style.display = (state.currentTab === 'monthly') ? 'none' : 'block';
-
-        const diff = actual - target;
-        const p = document.getElementById('savings-performance-pill');
-        if (actual === 0 && target > 0) { p.innerText = "Pending Deposit"; p.className = "pill neutral"; }
-        else { p.innerText = diff >= 0 ? "Goal Met" : "Under Goal"; p.className = `pill ${diff >= 0 ? 'giving' : 'bill'}`; }
 
         const totalOverall = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
         document.getElementById('total-saved-label').innerText = "$" + Math.round(totalOverall).toLocaleString() + " saved";
@@ -252,16 +247,6 @@
             createBubbles();
             confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
         }
-    }
-
-    function endMonthReset() {
-        if(!confirm(`Bank your savings and reset sliders?`)) return;
-        state.baseSavings += (state.p1.actualSavings + state.p2.actualSavings);
-        state.p1.actualSavings = 0; state.p2.actualSavings = 0;
-        Object.keys(state.p1.expenses).forEach(k => state.p1.expenses[k].val = state.p1.expenses[k].goal);
-        Object.keys(state.p2.expenses).forEach(k => state.p2.expenses[k].val = state.p2.expenses[k].goal);
-        save(); init();
-        showSpotlight();
     }
 
     function render() {
@@ -283,7 +268,7 @@
     function updateExp(k, v) { state[state.currentTab].expenses[k].val = parseFloat(v); save(); document.getElementById(`amt-${k}`).innerText = "$" + Math.round(v).toLocaleString(); calculateFinals(); }
     function updateIncome(v) { state[state.currentTab].income = parseFloat(v); save(); calculateFinals(); }
     function updateBase(v) { state.baseSavings = parseFloat(v); save(); calculateFinals(); }
-    function save() { localStorage.setItem('budgetShark_V2D', JSON.stringify(state)); }
+    function save() { localStorage.setItem('budgetShark_V2E', JSON.stringify(state)); }
     init();
 </script>
 </body>
