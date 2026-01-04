@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Budget Shark VSharky</title>
+    <title>Budget Shark</title>
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,22 +48,34 @@
         .hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--md-sys-color-on-surface-variant); display: block; }
         .hero-amount { font-size: 34px; font-weight: 700; color: var(--md-sys-color-primary); margin: 0; }
         
-        .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.03); }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.03); transition: transform 0.2s; }
+        .card:active { transform: scale(0.98); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; }
         
         .pill { padding: 6px 10px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 700; text-transform: uppercase; border: 1.5px solid transparent; background: rgba(255,255,255,0.05); cursor: pointer; display: inline-block; }
         .status-pill { border-width: 2px; background: transparent; pointer-events: none; margin-left: 4px; }
         .over { border-color: #F2B8B5; color: #F2B8B5; }
         .under { border-color: #C2EFB3; color: #C2EFB3; }
 
-        /* FIX: Ensure sliders are easy to grab */
-        input[type=range] { -webkit-appearance: none; width: 100%; height: 40px; background: transparent; touch-action: pan-y; cursor: pointer; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 10px; border-radius: 50px; background: #35323a; }
-        input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -9px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        /* Direct Numeric Input Styling */
+        .expense-input { 
+            background: rgba(255,255,255,0.05); 
+            border: 2px solid var(--md-sys-color-outline); 
+            border-radius: 16px; 
+            color: white; 
+            font-size: 24px; 
+            font-weight: 700; 
+            width: 100px; 
+            text-align: right; 
+            padding: 8px 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .expense-input:focus { border-color: var(--md-sys-color-primary); background: rgba(255,255,255,0.1); }
 
         .liquid-container { position: relative; width: 100%; height: 50px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 10px 0; }
         .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .swimming-shark-img { width: 50px !important; position: absolute; right: 0; top: 5px; cursor: pointer; z-index: 10; transition: transform 0.2s; }
+        .swimming-shark-img { width: 50px !important; position: absolute; right: 0; top: 5px; cursor: pointer; z-index: 10; }
         
         #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); pointer-events: none; }
         .chomp-shark-sprite { width: 200px !important; position: absolute; left: -250px; transition: none; }
@@ -100,7 +112,7 @@
             <div><span class="hero-label">Target Savings</span><p class="hero-amount" id="target-savings-display">$0</p></div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                 <span class="hero-label">Actual Saved</span>
-                <input type="number" id="actual-savings-input" class="tiny-input">
+                <input type="number" id="actual-savings-input" class="tiny-input" step="0.01">
                 <button class="deposit-btn" id="deposit-action" onclick="commitDeposit()">Deposit</button>
             </div>
         </div>
@@ -138,15 +150,16 @@
 
 <script>
     const getExpenses = () => ({
-        'tithe': { label: 'Tithe', val: 200, goal: 200, max: 400 },
-        'rent': { label: 'Rent', val: 400, goal: 400, max: 800 },
-        'phone': { label: 'Phone', val: 27.5, goal: 27.5, max: 80 },
-        'insur': { label: 'Insurance', val: 280, goal: 280, max: 600 },
-        'gas': { label: 'Gas', val: 50, goal: 50, max: 200 },
-        'spend': { label: 'Spending', val: 100, goal: 100, max: 400 }
+        'tithe': { label: 'Tithe', val: 200, goal: 200 },
+        'rent': { label: 'Rent', val: 400, goal: 400 },
+        'invis': { label: 'Invisalign', val: 65, goal: 65 }, // NEW ITEM
+        'phone': { label: 'Phone', val: 27.5, goal: 27.5 },
+        'insur': { label: 'Insurance', val: 280, goal: 280 },
+        'gas': { label: 'Gas', val: 50, goal: 50 },
+        'spend': { label: 'Spending', val: 100, goal: 100 }
     });
 
-    let state = JSON.parse(localStorage.getItem('SharkBudget_V7')) || {
+    let state = JSON.parse(localStorage.getItem('SharkBudget_V8')) || {
         currentTab: 'p1',
         baseSavings: 0,
         hasCelebrated: false,
@@ -158,9 +171,9 @@
     
     function updateExp(key, val) {
         if (state.currentTab === 'monthly') return;
-        state[state.currentTab].expenses[key].val = parseFloat(val);
+        state[state.currentTab].expenses[key].val = parseFloat(val) || 0;
         save();
-        render(); 
+        calculateMonthly(); // Update target display immediately
     }
 
     function setTarget(key) {
@@ -179,12 +192,11 @@
         state[state.currentTab].actualSavings = val;
         save();
         calculateMonthly();
-        // Visual feedback
         confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 } });
     }
 
     function endMonthReset() {
-        if(!confirm("Close out the month? This will move your paycheck savings into the 'Banked Total' and reset your sliders!")) return;
+        if(!confirm("Close out the month? This will move your paycheck savings into the 'Banked Total' and reset your numbers!")) return;
         state.baseSavings += (state.p1.actualSavings + state.p2.actualSavings);
         state.p1.actualSavings = 0; state.p2.actualSavings = 0;
         state.p1.expenses = getExpenses(); state.p2.expenses = getExpenses();
@@ -192,21 +204,19 @@
         render();
     }
 
-    function save() { localStorage.setItem('SharkBudget_V7', JSON.stringify(state)); }
+    function save() { localStorage.setItem('SharkBudget_V8', JSON.stringify(state)); }
 
     function render() {
         const container = document.getElementById('category-container');
         container.innerHTML = '';
         const isMonthly = state.currentTab === 'monthly';
         
-        // Update Static UI
         document.getElementById('income-input').value = isMonthly ? (state.p1.income + state.p2.income) : state[state.currentTab].income;
         document.getElementById('income-input').disabled = isMonthly;
         document.getElementById('base-savings-input').value = state.baseSavings;
         document.getElementById('reset-month-btn').style.display = isMonthly ? 'block' : 'none';
         document.getElementById('deposit-action').style.display = isMonthly ? 'none' : 'block';
 
-        // Update Actual Savings Input (Protect focus)
         if (document.activeElement !== document.getElementById('actual-savings-input')) {
             document.getElementById('actual-savings-input').value = isMonthly ? (state.p1.actualSavings + state.p2.actualSavings) : state[state.currentTab].actualSavings;
         }
@@ -215,7 +225,6 @@
         Object.keys(getExpenses()).forEach(k => {
             let val = isMonthly ? (state.p1.expenses[k].val + state.p2.expenses[k].val) : state[state.currentTab].expenses[k].val;
             let goal = isMonthly ? (state.p1.expenses[k].goal + state.p2.expenses[k].goal) : state[state.currentTab].expenses[k].goal;
-            let max = isMonthly ? (state.p1.expenses[k].max + state.p2.expenses[k].max) : state[state.currentTab].expenses[k].max;
             
             const diff = val - goal;
             const statusText = diff === 0 ? '' : (diff > 0 ? `+$${diff.toFixed(0)}` : `-$${Math.abs(diff).toFixed(0)}`);
@@ -225,12 +234,16 @@
                     <div class="card-header">
                         <div>
                             <span class="hero-label">${state.p1.expenses[k].label}</span>
-                            <div class="pill" onclick="setTarget('${k}')">Target: $${goal.toFixed(0)}</div>
+                            <div class="pill" onclick="setTarget('${k}')">Target: $${goal.toFixed(2)}</div>
                             ${statusText ? `<div class="pill status-pill ${diff > 0 ? 'over' : 'under'}">${statusText}</div>` : ''}
                         </div>
-                        <span style="font-weight:700; font-size:24px;">$${Math.round(val)}</span>
+                        <input type="number" 
+                               class="expense-input" 
+                               value="${val.toFixed(2)}" 
+                               ${isMonthly ? 'disabled' : ''} 
+                               oninput="updateExp('${k}', this.value)"
+                               step="0.01">
                     </div>
-                    ${!isMonthly ? `<input type="range" min="0" max="${max}" step="1" value="${val}" oninput="updateExp('${k}', this.value)">` : ''}
                 </div>
             `;
         });
@@ -249,7 +262,6 @@
         const progress = Math.min((totalBanked / 5000) * 100, 100);
         document.getElementById('goal-progress-fill').style.width = progress + "%";
 
-        // CELEBRATION TRIGGER
         if (totalBanked >= 5000 && !state.hasCelebrated) {
             state.hasCelebrated = true; save();
             document.getElementById('celebration-overlay').style.display = 'flex';
@@ -267,8 +279,6 @@
             const shark = document.getElementById('chomp-shark-anim');
             overlay.style.display = 'flex';
             shark.style.left = '-250px';
-            shark.style.transition = 'none';
-            
             setTimeout(() => {
                 shark.style.transition = 'left 1.5s linear';
                 shark.style.left = '110%';
