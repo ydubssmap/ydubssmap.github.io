@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Shark V3E</title>
+    <title>Budget Shark V2E</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -144,12 +144,11 @@
 
 <script>
     let clickCount = 0;
-    const heartShape = confetti.shapeFromPath({ path: 'M167 72c19,-38 37,-56 75,-56 42,0 75,33 75,75 0,84 -150,165 -150,165 0,0 -150,-81 -150,-165 0,-42 33,-75 75,-75 38,0 56,18 75,56z' });
 
     function sharkClick() {
         clickCount++;
         if (clickCount < 4) {
-            confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], shapes: [heartShape], scalar: 2 });
+            confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493'], scalar: 2 });
         } else {
             const overlay = document.getElementById('chomp-overlay');
             const shark = document.getElementById('chomp-shark-anim');
@@ -190,6 +189,17 @@
         }());
     }
 
+    function endMonthReset() {
+        const newBase = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
+        state.baseSavings = newBase;
+        state.p1.actualSavings = 0;
+        state.p2.actualSavings = 0;
+        document.getElementById('base-savings').value = newBase;
+        save();
+        calculateFinals();
+        alert('Month closed! Savings have been banked.');
+    }
+
     // Logic State
     const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 2244, actualSavings: 0, expenses: getDefaults() }, p2: { income: 2244, actualSavings: 0, expenses: getDefaults() } };
     function getDefaults() { return { 'tithe': { label: 'Tithe', val: 200, max: 500, goal: 200, type: 'giving' }, 'rent': { label: 'Rent', val: 400, max: 800, goal: 400, type: 'bill' }, 'insur': { label: 'Insurance', val: 560, max: 700, goal: 560, type: 'bill' }, 'gas': { label: 'Gas', val: 90, max: 200, goal: 90, type: 'variable' }, 'spend': { label: 'Spending', val: 200, max: 500, goal: 200, type: 'variable' } }; }
@@ -199,10 +209,11 @@
     function init() {
         state = JSON.parse(localStorage.getItem('budgetShark_V2E')) || JSON.parse(JSON.stringify(defaultState));
         document.getElementById('base-savings').value = state.baseSavings;
+        document.getElementById('income-input').value = state[state.currentTab].income;
         render();
     }
 
-    function switchTab(t) { state.currentTab = t; render(); }
+    function switchTab(t) { state.currentTab = t; document.getElementById('income-input').value = state[t === 'monthly' ? 'p1' : t].income; render(); }
     
     function commitDeposit() {
         const val = parseFloat(document.getElementById('actual-savings-input').value) || 0;
@@ -229,7 +240,6 @@
         
         document.getElementById('target-savings-display').innerText = "$" + Math.round(target).toLocaleString();
         
-        // Fix: Don't clear the input while the user is typing, only update it on tab switch or deposit
         if(document.activeElement !== document.getElementById('actual-savings-input')) {
             document.getElementById('actual-savings-input').value = (state.currentTab === 'monthly') ? actual : (actual || "");
         }
