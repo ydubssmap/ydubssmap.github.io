@@ -18,23 +18,23 @@
             --radius-pill: 50px;
         }
 
-        body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; }
-        .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 150px; }
+        body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 100px; z-index: 5; }
         header { text-align: center; padding: 10px 0; }
         h1 { font-family: 'Pacifico', cursive; font-size: 34px; color: var(--md-sys-color-primary); margin: 0; }
 
-        /* Spotlight Overlay */
-        #spotlight-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1000; display: none; pointer-events: none; }
-        #spotlight-circle { position: absolute; width: 180px; height: 180px; border-radius: 50%; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.85); z-index: 1001; transform: translate(-50%, -50%); transition: all 0.3s ease-out; }
+        /* Overlays */
+        #spotlight-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 100; display: none; pointer-events: none; }
+        #spotlight-circle { position: absolute; width: 160px; height: 160px; border-radius: 50%; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7); z-index: 101; transform: translate(-50%, -50%); }
 
-        /* Chomp Overlay */
-        #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); }
-        #chomp-text { font-family: 'Pacifico', cursive; font-size: 80px; color: #FF99CC; z-index: 2001; position: absolute; }
-        .chomp-shark-sprite { width: 250px !important; position: absolute; left: -300px; z-index: 2002; }
+        #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
+        #chomp-container { font-family: 'Pacifico', cursive; font-size: 70px; color: #FF99CC; opacity: 0.8; display: flex; z-index: 2001; }
+        .chomp-shark-sprite { width: 280px !important; position: absolute; left: -320px; z-index: 2002; }
 
-        .segmented-control { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-pill); display: flex; position: relative; height: 52px; overflow: hidden; }
+        .segmented-control { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-pill); display: flex; position: relative; height: 52px; overflow: hidden; margin-bottom: 10px; }
         .segmented-control input { display: none; }
         .segmented-control label { flex: 1; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--md-sys-color-on-surface); }
+        .segmented-control input:checked + label { color: var(--md-sys-color-on-primary); transition: color 0.3s; }
         .selection-indicator { position: absolute; height: 100%; width: 33.33%; background-color: var(--md-sys-color-primary); border-radius: var(--radius-pill); top: 0; left: 0; transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1); z-index: 1; }
         #tab-1:checked ~ .selection-indicator { transform: translateX(0%); }
         #tab-2:checked ~ .selection-indicator { transform: translateX(100%); }
@@ -48,36 +48,50 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; }
         
         .pill { padding: 6px 10px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 700; text-transform: uppercase; background: rgba(255,255,255,0.05); cursor: pointer; }
-        .status-pill { border: 2px solid transparent; pointer-events: none; }
+        .status-pill { border: 2px solid transparent; pointer-events: none; margin-left: 4px; }
         .over { border-color: #F2B8B5; color: #F2B8B5; }
         .under { border-color: #C2EFB3; color: #C2EFB3; }
 
-        .expense-input { background: rgba(255,255,255,0.05); border: 2px solid var(--md-sys-color-outline); border-radius: 16px; color: white; font-size: 22px; font-weight: 700; width: 90px; text-align: right; padding: 6px; outline: none; }
-        .manual-amt { font-size: 24px; font-weight: 700; color: var(--md-sys-color-primary); cursor: pointer; user-select: none; }
-
+        .expense-input-wrapper { position: relative; display: flex; align-items: center; }
+        .currency-symbol { position: absolute; left: 10px; font-weight: 700; color: var(--md-sys-color-primary); }
+        .expense-input { background: rgba(255,255,255,0.05); border: 2px solid var(--md-sys-color-outline); border-radius: 16px; color: white; font-size: 20px; font-weight: 700; width: 100px; text-align: right; padding: 8px; padding-left: 25px; outline: none; }
+        
         input[type=range] { -webkit-appearance: none; width: 100%; height: 30px; background: transparent; }
         input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 50px; background: #35323a; }
-        input[type=range]::-webkit-slider-thumb { height: 26px; width: 26px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -9px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        input[type=range]::-webkit-slider-thumb { height: 26px; width: 26px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -9px; }
 
-        .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 10px 0; z-index: 1005; border: 2px solid rgba(255,255,255,0.1); }
-        .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .swimming-shark-img { width: 50px !important; position: absolute; right: 0; top: 5px; cursor: pointer; transition: transform 0.2s; }
+        .liquid-container { position: relative; width: 100%; height: 50px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 10px 0; z-index: 105; }
+        .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 0.8s; }
+        .swimming-shark-img { width: 50px !important; position: absolute; right: 0; top: 5px; cursor: pointer; }
         
-        .deposit-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 12px 20px; border-radius: var(--radius-pill); font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 12px; padding: 8px; width: 80px; text-align: center; }
+        .deposit-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 10px 15px; border-radius: var(--radius-pill); font-weight: bold; cursor: pointer; }
+        .reset-btn { background: #F2B8B5; color: #601410; border: none; padding: 15px; border-radius: var(--radius-xl); font-weight: 800; cursor: pointer; width: 100%; margin-top: 10px; }
+        .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 12px; padding: 8px; width: 85px; text-align: center; }
 
-        #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 20, 0.98); z-index: 3000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        /* Goal Celeb */
+        #goal-celeb { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 12, 20, 0.98); z-index: 3000; display: none; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; }
+        .big-shark-swim { position: absolute; width: 300px; left: -350px; }
+        .bubble { position: absolute; bottom: -50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #C2EFB3; font-weight: bold; animation: rise 4s infinite ease-in; }
+        @keyframes rise { 0% { transform: translateY(0) translateX(0); opacity: 1; } 100% { transform: translateY(-110vh) translateX(20px); opacity: 0; } }
     </style>
 </head>
 <body>
 
 <div id="spotlight-overlay"><div id="spotlight-circle"></div></div>
-<div id="chomp-overlay"><div id="chomp-text">CHOMP!!</div><img src="animated-shark.png" class="chomp-shark-sprite" id="chomp-shark-anim"></div>
 
-<div id="celebration-overlay">
-    <h1 style="font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 42px;">GOAL REACHED!</h1>
-    <p style="color: #D0BCFF; font-weight: 700;">PROUD OF YOU, MEG!! ❤️</p>
-    <button class="deposit-btn" onclick="document.getElementById('celebration-overlay').style.display='none'">You're my hero!</button>
+<div id="chomp-overlay">
+    <div id="chomp-container">
+        <span id="c1">C</span><span id="c2">H</span><span id="c3">O</span><span id="c4">M</span><span id="c5">P</span><span id="c6">!</span><span id="c7">!</span>
+    </div>
+    <img src="animated-shark.png" class="chomp-shark-sprite" id="chomp-shark-anim">
+</div>
+
+<div id="goal-celeb">
+    <div id="bubble-wrap"></div>
+    <img src="animated-shark.png" class="big-shark-swim" id="celeb-shark">
+    <h1 style="font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 42px; z-index: 3001;">$5,000 SAVED!</h1>
+    <p style="color: #D0BCFF; font-weight: 700; z-index: 3001;">YOU DID IT, MEG!! ❤️</p>
+    <button class="pill" style="margin-top:20px; padding:15px 25px; z-index:3001;" onclick="document.getElementById('goal-celeb').style.display='none'">You're my hero!</button>
 </div>
 
 <div class="app-container">
@@ -93,11 +107,18 @@
     <div class="hero-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <div><span class="hero-label">Target Savings</span><p class="hero-amount" id="target-savings-display">$0</p></div>
-            <div style="text-align: right; display: flex; flex-direction: column; gap: 8px;">
+            <div style="text-align: right; display: flex; flex-direction: column; gap: 5px;">
                 <span class="hero-label">Actual Saved</span>
-                <input type="number" id="actual-savings-input" class="tiny-input" placeholder="0.00">
+                <input type="number" id="actual-savings-input" class="tiny-input" placeholder="$0">
                 <button class="deposit-btn" onclick="triggerSpotlightDeposit()">Deposit</button>
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="hero-label">Income This Period</span>
+            <input type="number" id="income-input" class="tiny-input" oninput="updateIncome(this.value)">
         </div>
     </div>
 
@@ -120,7 +141,7 @@
             <span id="total-saved-label">$0 saved</span>
             <span>Goal: $5,000</span>
         </div>
-        <button id="reset-month-btn" class="deposit-btn" style="display:none; width:100%; margin-top:10px; background:#F2B8B5; color:#601410;" onclick="endMonthReset()">Close Month & Bank Savings</button>
+        <button id="reset-month-btn" class="reset-btn" style="display:none;" onclick="endMonthReset()">Close Month & Reset</button>
     </div>
 </div>
 
@@ -143,19 +164,22 @@
 
     function switchTab(t) { state.currentTab = t; render(); }
     function updateExp(key, val) { state[state.currentTab].expenses[key].val = parseFloat(val) || 0; save(); calculate(); }
+    function setTarget(key) { if (state.currentTab === 'monthly') return; state[state.currentTab].expenses[key].val = state[state.currentTab].expenses[key].goal; save(); render(); }
+    function updateIncome(v) { if (state.currentTab !== 'monthly') { state[state.currentTab].income = parseFloat(v) || 0; save(); calculate(); } }
     function updateBase(v) { state.baseSavings = parseFloat(v) || 0; save(); calculate(); }
-    function setTarget(key) { if(state.currentTab !== 'monthly') { state[state.currentTab].expenses[key].val = state[state.currentTab].expenses[key].goal; save(); render(); } }
     function save() { localStorage.setItem('SharkBudget_V10', JSON.stringify(state)); }
 
     function render() {
         const container = document.getElementById('category-container');
         container.innerHTML = '';
         const isMonthly = state.currentTab === 'monthly';
+        document.getElementById('income-input').value = isMonthly ? (state.p1.income + state.p2.income) : state[state.currentTab].income;
+        document.getElementById('income-input').disabled = isMonthly;
         document.getElementById('base-savings-input').value = state.baseSavings;
         document.getElementById('reset-month-btn').style.display = isMonthly ? 'block' : 'none';
 
         Object.keys(getExpenses()).forEach(k => {
-            let item = isMonthly ? { val: state.p1.expenses[k].val + state.p2.expenses[k].val, goal: state.p1.expenses[k].goal + state.p2.expenses[k].goal, label: state.p1.expenses[k].label, type: state.p1.expenses[k].type, max: state.p1.expenses[k].max*2 } : state[state.currentTab].expenses[k];
+            let item = isMonthly ? { val: state.p1.expenses[k].val + state.p2.expenses[k].val, goal: state.p1.expenses[k].goal + state.p2.expenses[k].goal, type: state.p1.expenses[k].type, label: state.p1.expenses[k].label } : state[state.currentTab].expenses[k];
             const diff = item.val - item.goal;
             const statusText = diff === 0 ? '' : (diff > 0 ? `+$${diff.toFixed(0)}` : `-$${Math.abs(diff).toFixed(0)}`);
 
@@ -163,22 +187,17 @@
                 <div class="card">
                     <div class="card-header">
                         <div><span class="hero-label">${item.label}</span><br>
-                        <div class="pill" onclick="setTarget('${k}')">Target: $${item.goal.toFixed(0)}</div>
+                        <div class="pill" onclick="setTarget('${k}')">Goal: $${item.goal.toFixed(0)}</div>
                         ${statusText ? `<div class="pill status-pill ${diff > 0 ? 'over' : 'under'}">${statusText}</div>` : ''}</div>
-                        ${item.type === 'input' ? 
-                            `<input type="number" class="expense-input" value="${item.val}" oninput="updateExp('${k}', this.value)" ${isMonthly?'disabled':''}>` : 
-                            `<span class="manual-amt" ondblclick="manualPrompt('${k}')">$${Math.round(item.val)}</span>`}
+                        <div class="expense-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" class="expense-input" value="${item.val}" oninput="updateExp('${k}', this.value)" ${isMonthly?'disabled':''}>
+                        </div>
                     </div>
-                    ${item.type === 'range' && !isMonthly ? `<input type="range" min="0" max="${item.max}" value="${item.val}" oninput="updateExp('${k}', this.value)">` : ''}
+                    ${item.type === 'range' && !isMonthly ? `<input type="range" min="0" max="${item.max}" value="${item.val}" oninput="updateExp('${k}', this.value); this.previousElementSibling.querySelector('.expense-input').value = this.value;">` : ''}
                 </div>`;
         });
         calculate();
-    }
-
-    function manualPrompt(key) {
-        const current = state[state.currentTab].expenses[key].val;
-        const newVal = prompt(`Enter ${state[state.currentTab].expenses[key].label} amount:`, current);
-        if (newVal !== null) { updateExp(key, newVal); render(); }
     }
 
     function calculate() {
@@ -188,29 +207,43 @@
         const total = state.baseSavings + state.p1.actualSavings + state.p2.actualSavings;
         document.getElementById('total-saved-label').innerText = "$" + Math.round(total).toLocaleString() + " saved";
         document.getElementById('goal-progress-fill').style.width = Math.min((total/5000)*100, 100) + "%";
-        if (total >= 5000 && !state.hasCelebrated) { state.hasCelebrated = true; save(); document.getElementById('celebration-overlay').style.display = 'flex'; }
+        
+        if (total >= 5000 && !state.hasCelebrated) {
+            state.hasCelebrated = true; save();
+            triggerBigGoalCeleb();
+        }
     }
 
     function triggerSpotlightDeposit() {
         const val = parseFloat(document.getElementById('actual-savings-input').value) || 0;
-        state[state.currentTab].actualSavings = val;
-        save();
+        state[state.currentTab].actualSavings = val; save();
+        const overlay = document.getElementById('spotlight-overlay');
+        const circle = document.getElementById('spotlight-circle');
+        const target = document.getElementById('liquid-box').getBoundingClientRect();
+        overlay.style.display = 'block';
+        circle.style.top = (target.top + target.height/2) + 'px';
+        circle.style.left = (target.left + target.width/2) + 'px';
         calculate();
+        confetti({ particleCount: 60, spread: 80, origin: { y: 0.7 } });
+        setTimeout(() => { overlay.style.display = 'none'; }, 2200);
+    }
 
-        const bar = document.getElementById('progress-card');
-        bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
+    function triggerBigGoalCeleb() {
+        const overlay = document.getElementById('goal-celeb');
+        const bWrap = document.getElementById('bubble-wrap');
+        const shark = document.getElementById('celeb-shark');
+        overlay.style.display = 'flex';
+        bWrap.innerHTML = '';
+        for(let i=0; i<15; i++) {
+            let b = document.createElement('div'); b.className = 'bubble';
+            b.style.left = Math.random()*100 + 'vw'; b.style.width = b.style.height = (20+Math.random()*40)+'px';
+            b.style.animationDelay = Math.random()*2+'s'; b.innerText = '$';
+            bWrap.appendChild(b);
+        }
+        shark.style.left = '-350px';
         setTimeout(() => {
-            const overlay = document.getElementById('spotlight-overlay');
-            const circle = document.getElementById('spotlight-circle');
-            const target = document.getElementById('liquid-box').getBoundingClientRect();
-            
-            overlay.style.display = 'block';
-            circle.style.top = (window.scrollY + target.top + target.height/2) + 'px';
-            circle.style.left = (target.left + target.width/2) + 'px';
-            
-            confetti({ particleCount: 50, spread: 70, origin: { y: 0.8 } });
-            setTimeout(() => { overlay.style.display = 'none'; }, 2500);
+            shark.animate([{left: '-350px'}, {left: '110%'}], {duration: 3000, easing: 'ease-in-out'});
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
         }, 500);
     }
 
@@ -222,15 +255,17 @@
         } else {
             const overlay = document.getElementById('chomp-overlay');
             const shark = document.getElementById('chomp-shark-anim');
-            const txt = document.getElementById('chomp-text');
             overlay.style.display = 'flex';
-            txt.style.display = 'block';
-            shark.style.left = '-300px';
+            for(let i=1; i<=7; i++) document.getElementById('c'+i).style.visibility = 'visible';
+            shark.style.left = '-320px';
             setTimeout(() => {
-                shark.style.transition = 'left 1.8s linear';
+                shark.style.transition = 'left 2s linear';
                 shark.style.left = '120%';
-                setTimeout(() => { txt.style.display = 'none'; }, 800);
-                setTimeout(() => { overlay.style.display = 'none'; clicks = 0; }, 1800);
+                // Frame timing for eating letters
+                [350, 500, 650, 800, 950, 1100, 1250].forEach((time, idx) => {
+                    setTimeout(() => { document.getElementById('c'+(idx+1)).style.visibility = 'hidden'; }, time);
+                });
+                setTimeout(() => { overlay.style.display = 'none'; clicks = 0; }, 2200);
             }, 100);
         }
     }
