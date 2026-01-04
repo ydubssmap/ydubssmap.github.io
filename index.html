@@ -21,11 +21,12 @@
             --radius-pill: 50px;
         }
 
-        body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        body { background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; }
         .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; }
         header { text-align: center; padding: 10px 0; }
         h1 { font-family: 'Pacifico', cursive; font-size: 34px; color: var(--md-sys-color-primary); margin: 0; }
 
+        /* Navigation */
         .segmented-control { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-pill); display: flex; position: relative; height: 52px; margin-top: 20px; overflow: hidden; }
         .segmented-control input { display: none; }
         .segmented-control label { flex: 1; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--md-sys-color-on-surface-variant); }
@@ -35,60 +36,62 @@
         #tab-2:checked ~ .selection-indicator { transform: translateX(100%); }
         #tab-3:checked ~ .selection-indicator { transform: translateX(200%); }
 
-        /* Card Styles */
+        /* Cards & Sliders */
         .hero-card { background: linear-gradient(135deg, #2b2930 0%, #1D1B20 100%); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 16px; }
         .hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 6px; display: block; }
         .hero-amount { font-size: 38px; font-weight: 700; color: var(--md-sys-color-primary); margin: 0; line-height: 1; }
-        .card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-pill); padding: 24px; display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,0.03); }        .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pill { padding: 4px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1.5px solid transparent; background: transparent; display: inline-block; margin-top: 6px; }
         .pill.giving { border-color: #FFD54F; color: #FFD54F; }
         .pill.bill { border-color: #F2B8B5; color: #F2B8B5; }
         .pill.variable { border-color: #D0BCFF; color: #D0BCFF; }
         .pill.neutral { border-color: var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); }
 
-        /* ROUNDED SLIDERS */
         input[type=range] { -webkit-appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; border-radius: 50px; background: #35323a; }
-        input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); position: relative; z-index: 10; }
+        input[type=range]::-webkit-slider-thumb { height: 28px; width: 28px; border-radius: 50%; background: #ffffff; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
-        /* PROGRESS FOOTER */
-        .progress-card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.1); }
+        /* Progress Bar & Cute Shark */
+        .progress-card { background-color: var(--md-sys-color-surface); border-radius: var(--radius-xl); padding: 28px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .liquid-container { position: relative; width: 100%; height: 54px; background: #2b2930; border-radius: 50px; overflow: hidden; margin: 24px 0; }
         .liquid-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* THE SHARK & ANIMATIONS */
-        .swimming-shark { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 45px; cursor: pointer; transition: scale 0.1s; }
-        .swimming-shark:active { scale: 0.9; }
-        #shark-body { animation: swim-wiggle 0.6s infinite alternate ease-in-out; transform-origin: center; }
-        @keyframes swim-wiggle { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+        /* The Cute Swimming Shark SVG */
+        .swimming-shark { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 50px; cursor: pointer; animation: swim-wiggle 0.8s infinite alternate ease-in-out; }
+        @keyframes swim-wiggle { from { transform: translateY(-50%) rotate(-5deg); } to { transform: translateY(-50%) rotate(5deg); } }
 
-        /* CHOMP EFFECT */
-        #chomp-text { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); font-family: 'Pacifico', cursive; color: #F2B8B5; font-size: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-        .chomping #shark-mouth { d: path("M155 55Q165 55 180 55"); } /* Closes mouth */
+        /* Spotlight Effect */
+        .spotlight { outline: 9999px solid rgba(0,0,0,0.85); z-index: 100; position: relative; }
 
+        /* Full Screen CHOMP Overlay */
+        #chomp-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; align-items: center; justify-content: center; pointer-events: none; }
+        .chomp-text-large { font-family: 'Pacifico', cursive; font-size: 80px; color: #F2B8B5; text-shadow: 4px 4px 0px #fff; animation: chomp-shake 0.2s infinite; }
+        @keyframes chomp-shake { 0% { transform: translate(2px, 1px) rotate(0deg); } 50% { transform: translate(-1px, -2px) rotate(-1deg); } 100% { transform: translate(1px, 2px) rotate(1deg); } }
+        .chomp-shark-sprite { position: absolute; width: 250px; left: -300px; transition: left 0.8s ease-in; }
+
+        /* Tiny Inputs & Reset */
         .tiny-input { background: rgba(255,255,255,0.08); border: 1px solid var(--md-sys-color-outline); color: white; border-radius: 14px; padding: 10px; width: 100px; text-align: center; outline: none; font-size: 14px; }
         .reset-btn { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; padding: 18px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; margin-top: 12px; width: 100%; font-size: 14px; }
 
         #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 20, 0.98); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .bubbly-text { font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 48px; line-height: 1.2; text-shadow: 4px 4px 0px #fff; animation: bounce 1s infinite alternate ease-in-out; }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-30px); } }
     </style>
 </head>
 <body>
 
+<div id="chomp-overlay">
+    <div class="chomp-text-large" id="chomp-words">CHOMP!!</div>
+    <div class="chomp-shark-sprite" id="chomp-shark-anim">
+        <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/><circle cx="160" cy="40" r="7" fill="white"/><circle cx="162" cy="38" r="3" fill="black"/><path d="M150 60 L185 60" stroke="black" stroke-width="4" stroke-linecap="round" id="shark-mouth-snap"/></svg>
+    </div>
+</div>
+
 <div id="celebration-overlay">
     <div style="width: 180px; margin-bottom: 20px;">
-        <svg viewBox="0 0 200 100">
-            <path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7"><animateTransform attributeName="transform" type="rotate" values="0 40 50; 15 40 50; 0 40 50" dur="0.5s" repeatCount="indefinite" /></path>
-            <path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/>
-            <circle cx="160" cy="40" r="7" fill="white"/><circle cx="162" cy="38" r="3" fill="black"/>
-            <path d="M155 65C165 70 175 65 180 60" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/>
-        </svg>
+        <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="#4FC3F7"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="#81D4FA"/><circle cx="160" cy="40" r="7" fill="white"/><circle cx="162" cy="38" r="3" fill="black"/><path d="M155 65C165 70 175 65 180 60" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
     </div>
-    <h1 class="bubbly-text">I KNEW YOU<br>COULD DO IT!</h1>
-    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px; font-size: 20px;">I LOVE YOU, MEG!! ❤️</p>
-    <button class="reset-btn" style="width: 180px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">You're my hero!</button>
+    <h1 style="font-family: 'Pacifico', cursive; color: #FF99CC; font-size: 48px;">I KNEW YOU<br>COULD DO IT!</h1>
+    <p style="color: #D0BCFF; font-weight: 700; margin-top: 20px;">I LOVE YOU, MEG!! ❤️</p>
+    <button class="reset-btn" style="width: 180px; margin-top: 30px;" onclick="document.getElementById('celebration-overlay').style.display='none'">You're the best!</button>
 </div>
 
 <div class="app-container">
@@ -106,33 +109,25 @@
             <div><span class="hero-label">Target Savings</span><p class="hero-amount" id="target-savings-display">$0</p></div>
             <div style="text-align: right;"><span class="hero-label">Actual Saved</span><input type="number" id="actual-savings-input" class="tiny-input" oninput="updateActualSavings(this.value)"></div>
         </div>
-        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Awaiting Entry</div>
+        <div id="savings-performance-pill" class="pill neutral" style="align-self: flex-start;">Waiting...</div>
     </div>
 
     <div class="card" style="padding: 20px 24px;"><div class="card-header"><span style="font-weight: 500;">Combined Monthly Income</span><input type="number" id="income-input" class="tiny-input" oninput="updateIncome(this.value)"></div></div>
     
     <div id="category-container" style="display: flex; flex-direction: column; gap: 20px;"></div>
 
-    <div class="progress-card">
+    <div id="goal-section" class="progress-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <span class="hero-label" style="color:var(--md-sys-color-primary)">Goal Progress</span>
             <div style="text-align: right;"><span class="hero-label">Banked Total</span><input type="number" id="base-savings" class="tiny-input" style="width:95px;" oninput="updateBase(this.value)"></div>
         </div>
-        
         <div class="liquid-container">
             <div id="goal-progress-fill" class="liquid-fill">
-                <div class="swimming-shark" id="main-shark" onclick="sharkClick()">
-                    <div id="chomp-text">CHOMP!</div>
-                    <svg viewBox="0 0 200 100" id="shark-body">
-                        <path d="M40 50L10 25V75L40 50Z" fill="white"/>
-                        <path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="white"/>
-                        <circle cx="160" cy="40" r="6" fill="#0288D1"/>
-                        <path id="shark-mouth" d="M155 65Q165 70 180 65" stroke="#0288D1" stroke-width="3" fill="none"/>
-                    </svg>
+                <div class="swimming-shark" onclick="sharkClick()">
+                    <svg viewBox="0 0 200 100"><path d="M40 50L10 25V75L40 50Z" fill="white"/><path d="M40 50C40 20 85 10 130 10C175 10 190 30 190 50C190 70 175 90 130 90C85 90 40 80 40 50Z" fill="white"/><circle cx="160" cy="40" r="6" fill="#0288D1"/></svg>
                 </div>
             </div>
         </div>
-
         <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--md-sys-color-on-surface-variant); padding: 0 4px;">
             <span id="total-saved-label">$0 saved</span>
             <span>Goal: $5,000</span>
@@ -145,45 +140,57 @@
     let clickCount = 0;
     function sharkClick() {
         clickCount++;
-        const shark = document.getElementById('main-shark');
-        const rect = shark.getBoundingClientRect();
-
         if (clickCount < 4) {
-            // Heart Burst
-            confetti({
-                particleCount: 5, spread: 40, origin: { x: (rect.left + rect.width/2) / window.innerWidth, y: rect.top / window.innerHeight },
-                colors: ['#FF69B4', '#FFB6C1'], shapes: ['circle'], scalar: 0.7
-            });
+            confetti({ particleCount: 15, spread: 50, origin: { y: 0.8 }, colors: ['#FF69B4', '#D0BCFF'] });
         } else {
-            // CHOMP!
-            document.getElementById('chomp-text').style.opacity = '1';
-            shark.classList.add('chomping');
-            setTimeout(() => {
-                document.getElementById('chomp-text').style.opacity = '0';
-                shark.classList.remove('chomping');
-                clickCount = 0;
-            }, 800);
+            const overlay = document.getElementById('chomp-overlay');
+            const shark = document.getElementById('chomp-shark-anim');
+            overlay.style.display = 'flex';
+            setTimeout(() => { shark.style.left = '110%'; }, 100);
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+                shark.style.left = '-300px'; 
+                clickCount = 0; 
+            }, 1200);
         }
     }
 
-    // Logic and State management (V6 updated)
     const defaultState = { currentTab: 'p1', baseSavings: 0, p1: { income: 2244, actualSavings: 0, expenses: getDefaults() }, p2: { income: 2244, actualSavings: 0, expenses: getDefaults() } };
     function getDefaults() { return { 'tithe': { label: 'Tithe', val: 200, max: 500, goal: 200, type: 'giving' }, 'rent': { label: 'Rent', val: 400, max: 800, goal: 400, type: 'bill' }, 'insur': { label: 'Insurance', val: 560, max: 700, goal: 560, type: 'bill' }, 'gas': { label: 'Gas', val: 90, max: 200, goal: 90, type: 'variable' }, 'spend': { label: 'Spending', val: 200, max: 500, goal: 200, type: 'variable' } }; }
     let state = {};
     let hasCelebrated = false;
 
     function init() {
-        const saved = localStorage.getItem('budgetShark_V7');
-        state = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultState));
+        state = JSON.parse(localStorage.getItem('budgetShark_V8')) || JSON.parse(JSON.stringify(defaultState));
         document.getElementById('base-savings').value = state.baseSavings;
         render();
     }
 
     function switchTab(t) { state.currentTab = t; render(); }
-    function updateIncome(v) { if(state.currentTab !== 'monthly'){ state[state.currentTab].income = parseFloat(v)||0; save(); calculateFinals(); }}
-    function updateBase(v) { state.baseSavings = parseFloat(v)||0; save(); calculateFinals(); }
-    function updateActualSavings(v) { if(state.currentTab !== 'monthly'){ state[state.currentTab].actualSavings = parseFloat(v)||0; save(); calculateFinals(); }}
-    function updateExp(key, v) { state[state.currentTab].expenses[key].val = parseFloat(v)||0; document.getElementById(`amt-${key}`).innerText = "$" + Math.round(v).toLocaleString(); save(); calculateFinals(); }
+    function updateActualSavings(v) { 
+        if(state.currentTab !== 'monthly'){ 
+            state[state.currentTab].actualSavings = parseFloat(v)||0; 
+            save(); calculateFinals(); 
+            if(v > 0) showSpotlight();
+        }
+    }
+
+    function showSpotlight() {
+        const sec = document.getElementById('goal-section');
+        sec.scrollIntoView({ behavior: 'smooth' });
+        sec.classList.add('spotlight');
+        setTimeout(() => sec.classList.remove('spotlight'), 2000);
+    }
+
+    function endMonthReset() {
+        if(!confirm(`Bank your savings and reset sliders?`)) return;
+        state.baseSavings += (state.p1.actualSavings + state.p2.actualSavings);
+        state.p1.actualSavings = 0; state.p2.actualSavings = 0;
+        Object.keys(state.p1.expenses).forEach(k => state.p1.expenses[k].val = state.p1.expenses[k].goal);
+        Object.keys(state.p2.expenses).forEach(k => state.p2.expenses[k].val = state.p2.expenses[k].goal);
+        save(); render();
+        showSpotlight();
+    }
 
     function calculateFinals() {
         const p1Exp = Object.values(state.p1.expenses).reduce((a, b) => a + b.val, 0);
@@ -193,45 +200,46 @@
         
         document.getElementById('target-savings-display').innerText = "$" + Math.round(target).toLocaleString();
         document.getElementById('actual-savings-input').value = (state.currentTab === 'monthly') ? actual : (actual || "");
-        document.getElementById('actual-savings-input').disabled = (state.currentTab === 'monthly');
-
+        
         const totalOverall = state.baseSavings + (state.p1.actualSavings + state.p2.actualSavings);
         document.getElementById('total-saved-label').innerText = "$" + Math.round(totalOverall).toLocaleString() + " saved";
-        const percent = Math.min((totalOverall / 5000) * 100, 100);
-        document.getElementById('goal-progress-fill').style.width = percent + "%";
+        document.getElementById('goal-progress-fill').style.width = Math.min((totalOverall / 5000) * 100, 100) + "%";
         document.getElementById('reset-month-btn').style.display = state.currentTab === 'monthly' ? 'block' : 'none';
 
         if (totalOverall >= 5000 && !hasCelebrated) { 
             hasCelebrated = true; 
             document.getElementById('celebration-overlay').style.display = 'flex';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
         }
     }
 
     function render() {
         const container = document.getElementById('category-container');
         container.innerHTML = '';
-        if (state.currentTab === 'monthly') {
-            document.getElementById('income-input').value = state.p1.income + state.p2.income;
-            Object.keys(state.p1.expenses).forEach(k => {
-                const total = state.p1.expenses[k].val + state.p2.expenses[k].val;
-                container.innerHTML += `<div class="card"><div class="card-header"><span style="font-weight:500; color:var(--md-sys-color-on-surface-variant); font-size:16px;">${state.p1.expenses[k].label}</span><span style="font-weight:700;font-size:28px;">$${Math.round(total).toLocaleString()}</span></div></div>`;
-            });
-        } else {
-            document.getElementById('income-input').value = state[state.currentTab].income;
-            Object.entries(state[state.currentTab].expenses).forEach(([k, d]) => {
-                container.innerHTML += `<div class="card"><div class="card-header"><div><span class="hero-label">${d.label}</span><div class="pill ${d.type}">Target: $${d.goal}</div></div><span style="font-weight:700;font-size:28px;" id="amt-${k}">$${Math.round(d.val).toLocaleString()}</span></div><input type="range" id="slider-${k}" min="0" max="${d.max}" value="${d.val}" oninput="updateExp('${k}', this.value)"></div>`;
+        const data = state.currentTab === 'monthly' ? state.p1.expenses : state[state.currentTab].expenses;
+        Object.entries(data).forEach(([k, d]) => {
+            let val = state.currentTab === 'monthly' ? (state.p1.expenses[k].val + state.p2.expenses[k].val) : d.val;
+            let html = `<div class="card"><div class="card-header"><div><span class="hero-label">${d.label}</span>`;
+            if(state.currentTab !== 'monthly') html += `<div class="pill ${d.type}">Target: $${d.goal}</div>`;
+            html += `</div><span style="font-weight:700;font-size:28px;" id="amt-${k}">$${Math.round(val).toLocaleString()}</span></div>`;
+            if(state.currentTab !== 'monthly') html += `<input type="range" id="slider-${k}" min="0" max="${d.max}" value="${d.val}" oninput="updateExp('${k}', this.value)">`;
+            html += `</div>`;
+            container.innerHTML += html;
+            if(state.currentTab !== 'monthly') {
                 setTimeout(() => {
                     const s = document.getElementById(`slider-${k}`);
-                    const pct = (s.value - s.min) / (s.max - s.min) * 100;
+                    const pct = (s.value / s.max) * 100;
                     let c = d.type === 'bill' ? '#F2B8B5' : (d.type === 'giving' ? '#FFD54F' : '#D0BCFF');
                     s.style.background = `linear-gradient(to right, ${c} ${pct}%, #35323a ${pct}%)`;
                 }, 10);
-            });
-        }
+            }
+        });
         calculateFinals();
     }
-    function save() { localStorage.setItem('budgetShark_V7', JSON.stringify(state)); }
+    function updateExp(k, v) { state[state.currentTab].expenses[k].val = parseFloat(v); save(); render(); }
+    function updateIncome(v) { state[state.currentTab].income = parseFloat(v); save(); calculateFinals(); }
+    function updateBase(v) { state.baseSavings = parseFloat(v); save(); calculateFinals(); }
+    function save() { localStorage.setItem('budgetShark_V8', JSON.stringify(state)); }
     init();
 </script>
 </body>
